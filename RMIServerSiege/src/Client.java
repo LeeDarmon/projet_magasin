@@ -1,4 +1,3 @@
-import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
@@ -14,7 +13,7 @@ public static void main(String[] args) throws Exception {
        Registry reg = LocateRegistry.getRegistry("10.25.143.99", 9103);
  
       // Recherche dans le registre de l'objet distant
-      RemoteInter stub = (RemoteInter) reg.lookup("RemoteInter"); 
+      InterfaceArticle stub = (InterfaceArticle) reg.lookup("RemoteInter"); 
  
       // Appel de la méthode distante à l'aide de l'objet obtenu
       List<Article> liste = stub.getArticle(); 

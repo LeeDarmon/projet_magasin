@@ -2,7 +2,7 @@ import java.sql.*;
 import java.util.*;  
 
 // Implémenter l'interface de l'objet distante
-public class ImplClasse implements RemoteInter {  
+public class ImplClasse implements InterfaceArticle {  
    
    // Implémenter la méthode de l'interface
    public List<Article> getArticle() throws Exception 
@@ -41,5 +41,41 @@ public class ImplClasse implements RemoteInter {
       }
       res.close(); 
       return liste;     
-   }  
+   }
+
+@Override
+public List<Article> getArticle(int reference) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+@Override
+public Article getArticleStock(Article article) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+@Override
+public List<Article> getArticleInformations(Article article) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+@Override
+public List<Article> getArticleFamille(Article article) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+@Override
+public void AddArticle(Article article) throws Exception {
+    // TODO Auto-generated method stub
+    
+}
+
+@Override
+public void addArticleStock(Article articleCible, int nbExemplaire) throws Exception {
+    // TODO Auto-generated method stub
+    
+}  
 }

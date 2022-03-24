@@ -15,6 +15,14 @@ public class SiegeServer {
         registry = LocateRegistry.createRegistry(RMI_PORT);
     }
     
+    public void Update() throws RemoteException {
+        
+    }
+    
+    public void Fetch() throws RemoteException {
+        
+    }
+    
     public void stop() throws NoSuchObjectException {
         System.out.println("stopping rmi server.");
         UnicastRemoteObject.unexportObject(registry, true);
@@ -26,7 +34,7 @@ public class SiegeServer {
         ImplClasse obj = new ImplClasse(); 
 
         // ici, nous exportons l'objet distant vers le stub
-        RemoteInter stub = (RemoteInter) UnicastRemoteObject.exportObject(obj, 0); 
+        InterfaceArticle stub = (InterfaceArticle) UnicastRemoteObject.exportObject(obj, 0); 
         registry.rebind("RemoteInter", stub);  
         System.out.println("Le Serveur est prêt..."); 
         
