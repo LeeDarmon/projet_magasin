@@ -11,7 +11,7 @@ public class SiegeServer {
     private Registry registry = null;
 
     public SiegeServer() throws RemoteException {
-        System.setProperty("java.rmi.server.hostname","10.25.143.99");
+        System.setProperty("java.rmi.server.hostname","127.0.1.1");
         registry = LocateRegistry.createRegistry(RMI_PORT);
     }
     
@@ -23,7 +23,7 @@ public class SiegeServer {
         
     }
     
-    public void stop() throws NoSuchObjectException {
+    public void Stop() throws NoSuchObjectException {
         System.out.println("stopping rmi server.");
         UnicastRemoteObject.unexportObject(registry, true);
         System.exit(0);
@@ -31,13 +31,12 @@ public class SiegeServer {
     
     public void initialize() throws AccessException, RemoteException, AlreadyBoundException {
         // crée l'objet distant
-        ImplClasse obj = new ImplClasse(); 
+        ImplClasseArticle obj = new ImplClasseArticle(); 
 
         // ici, nous exportons l'objet distant vers le stub
         InterfaceArticle stub = (InterfaceArticle) UnicastRemoteObject.exportObject(obj, 0); 
         registry.rebind("RemoteInter", stub);  
         System.out.println("Le Serveur est prêt..."); 
-        
     }
     public static void main(String args[]) {
     try { 
