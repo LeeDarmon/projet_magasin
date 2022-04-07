@@ -56,4 +56,16 @@ public class ImplClassServer implements InterfaceArticle, InterfaceCommande{
         
     }
 
+    @Override
+    public List<Article> getArticleByID(int id) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Article getArticle(String nomArticle) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

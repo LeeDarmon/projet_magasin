@@ -43,5 +43,10 @@ public class Article implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
+
+    public static Article getArticleByID(int i) {
+        // TODO Auto-generated method stub
+        return null;
+    }
     
 }
