@@ -85,8 +85,8 @@ public class Commande implements Serializable {
         this.ticket = jsonString;
     }
     
-    public Commande Deserialize() {
-        Commande targetObject = new Gson().fromJson(this.ticket, Commande.class);
+    public Commande Deserialize(String tic) {
+        Commande targetObject = new Gson().fromJson(tic, Commande.class);
         return targetObject;
     }
 

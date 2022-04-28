@@ -31,7 +31,7 @@ public class SiegeServer {
     
     public void initialize() throws AccessException, RemoteException, AlreadyBoundException {
         // crée l'objet distant
-        ImplClasseArticle obj = new ImplClasseArticle(); 
+        ImplClasseSiege obj = new ImplClasseSiege(); 
 
         // ici, nous exportons l'objet distant vers le stub
         InterfaceArticle stub = (InterfaceArticle) UnicastRemoteObject.exportObject(obj, 0); 

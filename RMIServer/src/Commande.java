@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +32,30 @@ public class Commande implements Serializable {
      */
     public List<Article> getListArticle() {
         return listArticle;
+    }
+
+    public Commande(List<Article> listArticle, Date date_emission, int prixtotal, String ticket) {
+        super();
+        this.listArticle = listArticle;
+        this.date_emission = date_emission;
+        this.prixtotal = prixtotal;
+        this.ticket = ticket;
+    }
+    
+    public Commande() {
+        super();
+        this.listArticle = new ArrayList<Article>();
+        this.date_emission = null;
+        this.prixtotal = 0;
+        this.ticket = null;
+    }
+
+    public String getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(String ticket) {
+        this.ticket = ticket;
     }
 
     /**
@@ -74,7 +99,7 @@ public class Commande implements Serializable {
     public void resolvePrice() {
         int somme = 0;
         for(int i = 0; i < listArticle.size(); i++) {
-            somme += listArticle.get(i).getPrice();
+            somme += listArticle.get(i).getPrix_unitaire();
         }
         this.setPrixtotal(somme);
     }
