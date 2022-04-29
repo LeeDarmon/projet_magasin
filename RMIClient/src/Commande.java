@@ -16,13 +16,19 @@ public class Commande implements Serializable {
     
     @Override
     public String toString() {
-        return "Commande [listArticle=" + listArticle + ", date_emission=" + date_emission + ", prixtotal=" + prixtotal
+        String articles = "";
+        for(int i = 0; i < this.listArticle.size(); i++) {
+           articles = articles + " " + this.listArticle.get(i).getReference();
+           System.out.println(this.listArticle.get(i).getReference());
+        }
+        return "Commande [listArticle=" + articles + ", date_emission=" + date_emission + ", prixtotal=" + prixtotal
                 + ", ticket=" + ticket + "]";
     }
 
     private List<Article> listArticle;
     private Date date_emission;
     private int prixtotal;
+    private String numticket;
     private String ticket;
     
     
@@ -42,6 +48,22 @@ public class Commande implements Serializable {
         this.ticket = null;
     }
     
+    public List<Article> getListArticle() {
+        return listArticle;
+    }
+
+    public void setListArticle(List<Article> listArticle) {
+        this.listArticle = listArticle;
+    }
+
+    public String getNumticket() {
+        return numticket;
+    }
+
+    public void setNumticket(String numticket) {
+        this.numticket = numticket;
+    }
+
     public Date getDate_emission() {
         return date_emission;
     }

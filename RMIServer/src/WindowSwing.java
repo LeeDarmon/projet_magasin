@@ -170,8 +170,12 @@ public class WindowSwing {
     box2.add(new JSeparator());
 
     box2.add(Box.createRigidArea(new Dimension(15, 0)));
+    JTextField searchArticleArea = new JTextField();
     box3.add(new JLabel("Search article : "));
-    box3.add(new JTextField(""));
+    box3.add(searchArticleArea);
+    JTextField searchFactureArea = new JTextField();
+    box3.add(new JLabel("Search facture : "));
+    box3.add(searchFactureArea);
     box4.add(Box.createRigidArea(new Dimension(15, 0)));
     box4.add(new JSeparator());
     box5.add(new JButton("Add product"));
@@ -190,8 +194,9 @@ public class WindowSwing {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setContentPane(ws.jp);
     frame.setJMenuBar(ws.jmb);
-    String strtoPath = System.getProperty("user.dir") + "\\res\\icon.png";
+    String strtoPath = System.getProperty("user.dir") + "\\res\\icon.jpg";
     Image icon = Toolkit.getDefaultToolkit().getImage(strtoPath);    
+    frame.setIconImage(icon);
     frame.setMinimumSize(new Dimension(250, 200));
     frame.pack();
     frame.setVisible(true);

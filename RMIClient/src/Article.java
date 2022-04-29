@@ -14,39 +14,43 @@ public class Article implements Serializable {
      */
     private static final long serialVersionUID = 1L;
     private int id;
-    private int price;
-
-    /**
-     * @return the price
-     */
-    public int getPrice() {
-        return price;
-    }
-
-    /**
-     * @param price : the price to set
-     */
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    /**
-     * @return the id
-     */
+    private int nb_exemplaire;
+    private String reference;
+    private String famille;
+    private int prix_unitaire;
+    
     public int getId() {
         return id;
     }
-
-    /**
-     * @param id the id to set
-     */
     public void setId(int id) {
         this.id = id;
     }
-
-    public static Article getArticleByID(int i) {
-        // TODO Auto-generated method stub
-        return null;
+    
+    public int getNb_exemplaire() {
+        return nb_exemplaire;
     }
+    public void setNb_exemplaire(int nb_exemplaire) {
+        this.nb_exemplaire = nb_exemplaire;
+    }
+    public String getReference() {
+        return reference;
+    }
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+    public String getFamille() {
+        return famille;
+    }
+    public void setFamille(String famille) {
+        this.famille = famille;
+    }
+    public int getPrix_unitaire() {
+        return prix_unitaire;
+    }
+    public void setPrix_unitaire(int prix_unitaire) {
+        this.prix_unitaire = prix_unitaire;
+    }
+
+
     
 }

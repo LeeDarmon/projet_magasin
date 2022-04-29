@@ -10,6 +10,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -127,7 +128,22 @@ public class WindowSwing {
     buyCartButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(null, "Cart bought");
+            String[] list = {"CB", "espèces"};
+            JComboBox jcb = new JComboBox(list);
+            jcb.setEditable(true);
+            JOptionPane.showMessageDialog( null, 
+                    jcb, 
+                    "Select method of payment", 
+                    JOptionPane.QUESTION_MESSAGE);
+            
+            
+            try {
+                ms.buyArticle();
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            JOptionPane.showMessageDialog(null, ms.commandeActuel.toString());
         }
     });
     box1.add(buyCartButton);
@@ -143,9 +159,19 @@ public class WindowSwing {
         public void actionPerformed(ActionEvent e) {
             String textFieldValue = searchField.getText();
             try {
-                ms.addArticle(textFieldValue);
-                JOptionPane.showMessageDialog(jp, textFieldValue);
-                
+                if(ms.stubArticle.getArticle(textFieldValue).getReference() != null) {
+
+                    int reply = JOptionPane.showConfirmDialog(null, "Add it to cart ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        ms.addArticle(textFieldValue);
+                        JOptionPane.showMessageDialog(null, "Added");
+                    } else {
+
+                    }   
+                } else {
+
+                    JOptionPane.showMessageDialog(null, "Not found");
+                }
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
@@ -166,8 +192,9 @@ public class WindowSwing {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setContentPane(ws.jp);
     frame.setJMenuBar(ws.jmb);
-    String strtoPath = System.getProperty("user.dir") + "\\res\\icon.png";
+    String strtoPath = System.getProperty("user.dir") + "\\res\\icon.jpg";
     Image icon = Toolkit.getDefaultToolkit().getImage(strtoPath);    
+    frame.setIconImage(icon);
     ws.ms = new Client();
     ws.ms.initialize();
     frame.setMinimumSize(new Dimension(250, 200));

@@ -14,6 +14,7 @@ public class Article implements Serializable {
      */
     private static final long serialVersionUID = 1L;
     private int id;
+    private int nb_exemplaire;
     private String reference;
     private String famille;
     private int prix_unitaire;
@@ -23,6 +24,13 @@ public class Article implements Serializable {
     }
     public void setId(int id) {
         this.id = id;
+    }
+    
+    public int getNb_exemplaire() {
+        return nb_exemplaire;
+    }
+    public void setNb_exemplaire(int nb_exemplaire) {
+        this.nb_exemplaire = nb_exemplaire;
     }
     public String getReference() {
         return reference;

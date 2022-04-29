@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ImplClassServer extends UnicastRemoteObject implements InterfaceArticle, InterfaceCommande, Serializable {
@@ -20,9 +21,9 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
 
     @Override
     public Boolean BuyArticle(Commande c) throws Exception {
-        String ref;
+        String ref = null;
+        int stock = 0;
         Connection conn = null;
-        Statement stmtSelect = null;
         
         //Enregistrer le pilote JDBC
         Class.forName("com.mysql.cj.jdbc.Driver");   
@@ -34,15 +35,16 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         
         //Exécuter la requête
         System.out.println("Créer l'objet Statement...");   
-        stmtSelect = conn.createStatement();  
         for(int i = 0; i < c.getListArticle().size(); i++) {
             List<Article> a = c.getListArticle();
             ref = a.get(i).getReference();
-
-
-            String sql = "SELECT * FROM article WHERE reference = " + ref; 
-            ResultSet res = stmtSelect.executeQuery(sql);
-            int stock = res.getInt("nb_exemplaire"); 
+            String sql = "SELECT * FROM article WHERE reference=?";         
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, ref);
+            ResultSet res = stmt.executeQuery();
+            if(res.next()) {
+                stock = res.getInt("nb_exemplaire");    
+            }
             
             if(stock <= 0) {
                 System.out.println("Plus de stock pour " + ref);
@@ -52,10 +54,10 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
             String sq = "UPDATE article set nb_exemplaire=? where reference=?"; 
             
             try (
-                PreparedStatement stmt = conn.prepareStatement(sq);) {
-              stmt.setString(2, ref);
-              stmt.setInt(1, stock - 1);
-              stmt.executeUpdate();
+                PreparedStatement stmts = conn.prepareStatement(sq);) {
+              stmts.setString(2, ref);
+              stmts.setInt(1, stock - 1);
+              stmts.executeUpdate();
               
               System.out.println("Article updated successfully ");
             } catch (SQLException e) {
@@ -64,12 +66,20 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
             }
             
         }
-        
+        //On prepare la facture 
+        c.setDate_emission();
+        c.setNumticket();
+        c.resolvePrice();
         //On serialise l'objet et stocke le gson correspondant 
         c.Serialize();
         try (Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate("insert into commande (ticket_de_caisse)" +
-                               "values("+ c.getTicket() +")");
+            stmt.executeUpdate("insert into commande (date_emission, methode_paiement, numticket, prix_total, ticket_de_caisse)" +
+                               "values("
+                               + c.Date_emissionToString() + 
+                               ", " + c.getMethode_paiement() +
+                               ", " + c.getNumticket() + 
+                               ", " + c.getPrixtotal() +
+                               ", "+ c.getTicket() +")");
           } catch (SQLException e) {
             e.printStackTrace();
           }
@@ -81,12 +91,6 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
 
     @Override
     public List<Article> getArticle() throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public List<Article> getArticle(int famille) throws Exception {
         // TODO Auto-generated method stub
         return null;
     }
@@ -104,29 +108,10 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
     }
 
     @Override
-    public List<Article> getArticleFamille(Article article) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void addArticleStock(Article articleCible, int nbExemplaire) throws Exception {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public List<Article> getArticleByID(int id) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Article getArticle(String reference) throws Exception {
-        Article article = new Article();
-        
-        Connection conn = null; 
-        Statement stmt = null;  
+    public List<Article> getArticleFamille(String famille) throws Exception {
+        List<Article> listeArticle = new ArrayList<Article>();
+        Connection conn = null;
+        Statement stmtSelect = null;
         
         //Enregistrer le pilote JDBC
         Class.forName("com.mysql.cj.jdbc.Driver");   
@@ -135,26 +120,93 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         System.out.println("Connexion à la base de données sélectionnée..."); 
         conn = DriverManager.getConnection("jdbc:mysql://localhost/magasin", "root", ""); 
         System.out.println("Base de données connectée avec succès...");  
+
+        stmtSelect = conn.createStatement();  
+        String sql = "SELECT * FROM article WHERE reference = " + famille + "AND WHERE nb_exemplaire > 0"; 
+        ResultSet res = stmtSelect.executeQuery(sql);
         
+        while(res.next()) {
+            Article a = new Article();
+            a.setFamille(famille);
+            a.setNb_exemplaire(res.getInt("nb_exemplaire"));
+            a.setReference(res.getString("reference"));
+            a.setPrix_unitaire(res.getInt("prix_unitaire"));
+            listeArticle.add(a);
+        }
+        
+        return listeArticle;
+    }
+
+    @Override
+    public void addArticleStock(Article articleCible, int nbExemplaire) throws Exception {
+        Connection conn = null;
+        Statement stmtSelect = null;
+        
+        //Enregistrer le pilote JDBC
+        Class.forName("com.mysql.cj.jdbc.Driver");   
+        
+        //Ouvrez une connexion
+        System.out.println("Connexion à la base de données sélectionnée..."); 
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/magasin", "root", ""); 
+        System.out.println("Base de données connectée avec succès...");  
+
+        String sql = "SELECT * FROM article WHERE reference = " + ref; 
+
+        stmtSelect = conn.createStatement();  
+        ResultSet res = stmtSelect.executeQuery(sql);
+        int stock = res.getInt("nb_exemplaire"); 
+        
+        //Exécuter la requête
+        System.out.println("Créer l'objet Statement...");   
+        String sq = "UPDATE article set nb_exemplaire=? where reference=?"; 
+        
+        try (
+            PreparedStatement stmt = conn.prepareStatement(sq);) {
+          stmt.setString(2, articleCible.getReference());
+          stmt.setInt(1, stock - 1);
+          stmt.executeUpdate();
+        
+    }
+}
+    
+    @Override
+    public Article getArticle(String reference) throws Exception {
+        Article article = new Article();
+
+        String sql = "SELECT * FROM article WHERE reference=?"; 
+        Connection conn = null; 
+        
+        //Enregistrer le pilote JDBC
+        Class.forName("com.mysql.cj.jdbc.Driver");   
+        
+        //Ouvrez une connexion
+        System.out.println("Connexion à la base de données sélectionnée..."); 
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/magasin", "root", ""); 
+        System.out.println("Base de données connectée avec succès...");  
+
+        PreparedStatement stmt = conn.prepareStatement(sql);  
         //Exécuter la requête
         System.out.println("Créer l'objet Statement..."); 
         
-        stmt = conn.createStatement();  
-        String sql = "SELECT * FROM article WHERE reference = '" + reference + "'"; 
-        ResultSet res = stmt.executeQuery(sql);  
+
+        stmt.setString(1, reference);
+        ResultSet res = stmt.executeQuery();
         
         //Extraire des données de ResultSet
         while(res.next()) {
            // Récupérer par nom de colonne
            int id = res.getInt("id"); 
            int price = res.getInt("prix_unitaire"); 
-           
+           System.out.println("test");
            // Définir les valeurs
-           Article p = new Article(); 
-           p.setId(id);
-           p.setPrix_unitaire(price);  
+           article.setId(id);
+           article.setReference(res.getString("reference"));
+           article.setNb_exemplaire(res.getInt("prix_unitaire"));
+           article.setFamille(res.getString("famille"));
+           article.setPrix_unitaire(price);  
         }
         res.close(); 
+        
         return article;     
     }
 
@@ -171,9 +223,39 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
     }
 
     @Override
-    public Commande getFacture(Commande c) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+    public Commande getFacture(String numticket) throws Exception {
+        Commande c = null;
+        Connection conn = null; 
+        Statement stmt = null;  
+        
+      //Enregistrer le pilote JDBC
+        Class.forName("com.mysql.cj.jdbc.Driver");   
+        
+        //Ouvrez une connexion
+        System.out.println("Connexion à la base de données sélectionnée..."); 
+        conn = DriverManager.getConnection("jdbc:mysql://localhost/magasin", "root", ""); 
+        System.out.println("Base de données connectée avec succès...");  
+        
+        //Exécuter la requête
+        System.out.println("Créer l'objet Statement..."); 
+        
+        stmt = conn.createStatement();  
+        String sql = "SELECT * FROM commande WHERE numticket = '" + numticket + "'"; 
+        ResultSet res = stmt.executeQuery(sql);  
+        
+        if(res != null) {
+           /* c.setDate_emission(res.getDate("date_emission"));
+            c.setNumticket(res.getString("numticket"));
+            c.setPrixtotal(res.getInt("prix_total"));   
+            c.setTicket(res.getString("ticket_de_caisse"));
+            */
+            c.setTicket(res.getString("ticket_de_caisse"));
+            c = c.Deserialize();
+            return c; 
+        } else {
+            return null;
+        }
     }
+
 
 }

@@ -190,7 +190,7 @@ public class WindowSwing {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setContentPane(ws.jp);
     frame.setJMenuBar(ws.jmb);
-    String strtoPath = System.getProperty("user.dir") + "\\res\\icon.png";
+    String strtoPath = System.getProperty("user.dir") + "\\res\\icon.jpg";
     Image icon = Toolkit.getDefaultToolkit().getImage(strtoPath);    
     frame.setIconImage(icon);   
     frame.setMinimumSize(new Dimension(250, 200));

@@ -24,12 +24,17 @@ public class Client  extends UnicastRemoteObject {
 
     public void addArticle(String reference) throws Exception {
         commandeActuel.addArticle(stubCommande.addArticle(stubArticle.getArticle(reference)));
-        System.out.println("Article" + reference + "added.");
+        System.out.println(stubArticle.getArticle(reference).getReference());
+
+        System.out.println("Article " + reference + " added.");
+    }
+    
+    public void buyArticle() throws Exception {
+        stubCommande.BuyArticle(commandeActuel);
     }
     
 public static void main(String[] args) throws Exception {  
    try { 
-       
       // Récupérer le registre
        Registry reg = LocateRegistry.getRegistry(1975);
  
@@ -44,9 +49,11 @@ public static void main(String[] args) throws Exception {
       c.removeArticle(stubArticle.getArticle("Terreau"));
    
       stubCommande.BuyArticle(c);
-      stubCommande.getFacture(c);
+      stubCommande.getFacture(c.getNumticket());
    } catch (Exception e) {
      System.err.println(e.toString()); 
    } 
-} 
+}
+
+
 }
