@@ -24,6 +24,7 @@ public class Client  extends UnicastRemoteObject {
 
     public void addArticle(String reference) throws Exception {
         commandeActuel.addArticle(stubCommande.addArticle(stubArticle.getArticle(reference)));
+        commandeActuel.resolvePrix();
         System.out.println(stubArticle.getArticle(reference).getReference());
 
         System.out.println("Article " + reference + " added.");

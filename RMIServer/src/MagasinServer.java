@@ -6,14 +6,31 @@ import java.util.List;
  
 public class MagasinServer {
     private Registry registry = null;
-    ImplClassServer implcs = null;
+    private ImplClassServer implcs = null;
+    private ImplClassMagasin implcm = null;
     public MagasinServer() throws RemoteException {
         System.setProperty("java.rmi.server.hostname","127.0.1.1");
         registry = LocateRegistry.createRegistry(1975);
     }
     
-    public void Update() throws RemoteException {
-     
+    public ImplClassServer getImplcs() {
+        return implcs;
+    }
+
+    public void setImplcs(ImplClassServer implcs) {
+        this.implcs = implcs;
+    }
+
+    public ImplClassMagasin getImplcm() {
+        return implcm;
+    }
+
+    public void setImplcm(ImplClassMagasin implcm) {
+        this.implcm = implcm;
+    }
+
+    public void Update() throws Exception {
+        this.getImplcm().updateAllArticles();
     }
     
     public void Fetch() throws RemoteException {
@@ -30,10 +47,12 @@ public class MagasinServer {
     public void initialize() throws AccessException, RemoteException, AlreadyBoundException {
         // crée l'objet distant
         ImplClassServer obj = new ImplClassServer(); 
+        ImplClassMagasin ob = new ImplClassMagasin();
         implcs = obj;
+        implcm = ob;
         
         // ici, nous exportons l'objet distant vers le stub
-        registry.rebind("RemoteInterMagasin", (InterfaceArticle) obj);  
+        registry.rebind("RemoteInterMagasin", obj);  
         System.out.println("Le Serveur magasin est prêt..."); 
     }
 

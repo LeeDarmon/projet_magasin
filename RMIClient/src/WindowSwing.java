@@ -138,6 +138,7 @@ public class WindowSwing {
             
             
             try {
+                ms.commandeActuel.setMethode_paiement(jcb.getSelectedItem().toString());
                 ms.buyArticle();
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
@@ -160,14 +161,20 @@ public class WindowSwing {
             String textFieldValue = searchField.getText();
             try {
                 if(ms.stubArticle.getArticle(textFieldValue).getReference() != null) {
+                /*    int input = (int) JOptionPane.showInputDialog(null, "Article found, please enter quantity", 
+                            "Add article",                 
+                            JOptionPane.QUESTION_MESSAGE,null,null,"default text");
+                    
+                    if(input != 0) {*/
+                        int reply = JOptionPane.showConfirmDialog(null, "Add it to cart ?", 
+                                "Confirmation", JOptionPane.YES_NO_OPTION);
+                        if (reply == JOptionPane.YES_OPTION) {
+                            ms.addArticle(textFieldValue);
+                            JOptionPane.showMessageDialog(null, "Added");
+                        } else {
 
-                    int reply = JOptionPane.showConfirmDialog(null, "Add it to cart ?", "Confirmation", JOptionPane.YES_NO_OPTION);
-                    if (reply == JOptionPane.YES_OPTION) {
-                        ms.addArticle(textFieldValue);
-                        JOptionPane.showMessageDialog(null, "Added");
-                    } else {
-
-                    }   
+                        }   
+                //    }
                 } else {
 
                     JOptionPane.showMessageDialog(null, "Not found");

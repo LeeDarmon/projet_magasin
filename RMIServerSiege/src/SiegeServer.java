@@ -9,12 +9,24 @@ import java.rmi.server.UnicastRemoteObject;
 public class SiegeServer {
     public final static int RMI_PORT = 1974;
     private Registry registry = null;
-
+    private ImplClasseSiege implcs;
+    
     public SiegeServer() throws RemoteException {
         System.setProperty("java.rmi.server.hostname","127.0.1.1");
         registry = LocateRegistry.createRegistry(RMI_PORT);
     }
     
+    
+    public ImplClasseSiege getImplcs() {
+        return implcs;
+    }
+
+
+    public void setImplcs(ImplClasseSiege implcs) {
+        this.implcs = implcs;
+    }
+
+
     public void Update() throws RemoteException {
         
     }
@@ -32,12 +44,13 @@ public class SiegeServer {
     public void initialize() throws AccessException, RemoteException, AlreadyBoundException {
         // crée l'objet distant
         ImplClasseSiege obj = new ImplClasseSiege(); 
-
+        implcs = obj;
         // ici, nous exportons l'objet distant vers le stub
         InterfaceArticle stub = (InterfaceArticle) UnicastRemoteObject.exportObject(obj, 0); 
         registry.rebind("RemoteInter", stub);  
         System.out.println("Le Serveur est prêt..."); 
     }
+    
     public static void main(String args[]) {
     try { 
         SiegeServer ss = new SiegeServer();

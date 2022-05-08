@@ -18,16 +18,16 @@ public class Commande implements Serializable {
     public String toString() {
         String articles = "";
         for(int i = 0; i < this.listArticle.size(); i++) {
-           articles = articles + " " + this.listArticle.get(i).getReference();
+           articles = "\n" + articles + this.listArticle.get(i).getReference();
            System.out.println(this.listArticle.get(i).getReference());
         }
-        return "Commande [listArticle=" + articles + ", date_emission=" + date_emission + ", prixtotal=" + prixtotal
-                + ", ticket=" + ticket + "]";
+        return "Commande \n\n liste articles:\n" + articles + "\n\nPrix total=" + this.getPrixtotal();
     }
 
     private List<Article> listArticle;
     private Date date_emission;
     private int prixtotal;
+    private String methode_paiement; 
     private String numticket;
     private String ticket;
     
@@ -48,6 +48,15 @@ public class Commande implements Serializable {
         this.ticket = null;
     }
     
+    public void resolvePrice() {
+        int somme = 0;
+        for(int i = 0; i < listArticle.size(); i++) {
+            somme += listArticle.get(i).getPrix_unitaire();
+        }
+        this.setPrixtotal(somme);
+    }
+    
+    
     public List<Article> getListArticle() {
         return listArticle;
     }
@@ -64,6 +73,23 @@ public class Commande implements Serializable {
         this.numticket = numticket;
     }
 
+    public String getMethode_paiement() {
+        return methode_paiement;
+    }
+    
+    public void resolvePrix() {
+        int somme = 0;
+        for(int i = 0; i < listArticle.size(); i++) {
+            somme += listArticle.get(i).getPrix_unitaire();
+        }
+        this.setPrixtotal(somme);
+    }
+    
+    
+    public void setMethode_paiement(String methode_paiement) {
+        this.methode_paiement = methode_paiement;
+    }
+    
     public Date getDate_emission() {
         return date_emission;
     }

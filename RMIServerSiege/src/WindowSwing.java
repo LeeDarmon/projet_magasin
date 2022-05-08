@@ -7,6 +7,7 @@ import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -19,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
@@ -123,12 +125,14 @@ public class WindowSwing {
     UpdateButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            try {
-                ms.Update();
-            } catch (RemoteException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
+                try {
+
+                    JOptionPane.showMessageDialog(null, "Update prices successfully");
+                    ms.getImplcs().UpdateAllArticles();
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
         }
     });
     box1.add(UpdateButton);
@@ -167,21 +171,29 @@ public class WindowSwing {
     });
     box1.add(startServ);
 
+    
+    JButton getCommandes = new JButton("Get commandes");
+    getCommandes.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                List<Commande> cm = ms.getImplcs().getFacture();
+                JOptionPane.showMessageDialog(null, "Commandes inserted successfully");
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        }
+    });
+    box1.add(getCommandes);
+    
     box2.add(new JSeparator());
 
     box2.add(Box.createRigidArea(new Dimension(15, 0)));
-    box3.add(new JLabel("Rechercher un article : "));
-    box3.add(new JTextField(""));
-    box4.add(Box.createRigidArea(new Dimension(15, 0)));
-    box4.add(new JSeparator());
-    box5.add(new JButton("Bouton 4"));
-    box5.add(new JButton("Bouton 5"));
-    box5.add(new JButton("bouton 6"));
     jp.add(box1);
     jp.add(box2);
     jp.add(box3);
     jp.add(box4);
-    jp.add(box5);
   }
 
   public static void main(String s[]) {

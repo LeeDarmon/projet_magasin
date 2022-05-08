@@ -88,7 +88,7 @@ public class Commande implements Serializable {
     
     public String Date_emissionToString() {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");  
         Date date = new Date();  
         return formatter.format(date);  
 
@@ -99,7 +99,7 @@ public class Commande implements Serializable {
     }
     
     public void setDate_emission() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");  
         Date date = new Date();  
         System.out.println(formatter.format(date));  
 

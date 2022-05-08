@@ -72,14 +72,21 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         c.resolvePrice();
         //On serialise l'objet et stocke le gson correspondant 
         c.Serialize();
+        System.out.println("insert into commande (date_emission, methode_paiement, numticket, prix_total, ticket_de_caisse)" +
+                "values("
+                + c.Date_emissionToString() + 
+                ", '" + c.getMethode_paiement() +
+                "', '" + c.getNumticket() + 
+                "', " + c.getPrixtotal() +
+                ", '"+  c.getTicket() +"')");
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate("insert into commande (date_emission, methode_paiement, numticket, prix_total, ticket_de_caisse)" +
                                "values("
-                               + c.Date_emissionToString() + 
-                               ", " + c.getMethode_paiement() +
-                               ", " + c.getNumticket() + 
-                               ", " + c.getPrixtotal() +
-                               ", "+ c.getTicket() +")");
+                               + "STR_TO_DATE(" + "'"+ c.Date_emissionToString() +"',\"%Y-%m-%d\")"+ 
+                               ", '" + c.getMethode_paiement() +
+                               "', '" + c.getNumticket() + 
+                               "', " + c.getPrixtotal() +
+                               ", '"+  c.getTicket() +"')");
           } catch (SQLException e) {
             e.printStackTrace();
           }
@@ -136,44 +143,12 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         
         return listeArticle;
     }
-
-    @Override
-    public void addArticleStock(Article articleCible, int nbExemplaire) throws Exception {
-        Connection conn = null;
-        Statement stmtSelect = null;
-        
-        //Enregistrer le pilote JDBC
-        Class.forName("com.mysql.cj.jdbc.Driver");   
-        
-        //Ouvrez une connexion
-        System.out.println("Connexion à la base de données sélectionnée..."); 
-        conn = DriverManager.getConnection("jdbc:mysql://localhost/magasin", "root", ""); 
-        System.out.println("Base de données connectée avec succès...");  
-
-        String sql = "SELECT * FROM article WHERE reference = " + ref; 
-
-        stmtSelect = conn.createStatement();  
-        ResultSet res = stmtSelect.executeQuery(sql);
-        int stock = res.getInt("nb_exemplaire"); 
-        
-        //Exécuter la requête
-        System.out.println("Créer l'objet Statement...");   
-        String sq = "UPDATE article set nb_exemplaire=? where reference=?"; 
-        
-        try (
-            PreparedStatement stmt = conn.prepareStatement(sq);) {
-          stmt.setString(2, articleCible.getReference());
-          stmt.setInt(1, stock - 1);
-          stmt.executeUpdate();
-        
-    }
-}
     
     @Override
     public Article getArticle(String reference) throws Exception {
         Article article = new Article();
 
-        String sql = "SELECT * FROM article WHERE reference=?"; 
+        String sql = "SELECT * FROM article WHERE reference=? AND where nb_exemplaire > 0"; 
         Connection conn = null; 
         
         //Enregistrer le pilote JDBC
@@ -197,7 +172,6 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
            // Récupérer par nom de colonne
            int id = res.getInt("id"); 
            int price = res.getInt("prix_unitaire"); 
-           System.out.println("test");
            // Définir les valeurs
            article.setId(id);
            article.setReference(res.getString("reference"));

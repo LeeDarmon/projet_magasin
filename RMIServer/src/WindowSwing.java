@@ -1,4 +1,5 @@
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -7,7 +8,13 @@ import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Properties;
 
+import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -19,11 +26,17 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.SqlDateModel;
+import org.jdatepicker.impl.UtilDateModel;
 
 public class WindowSwing {
     public JMenuBar jmb;
@@ -125,7 +138,7 @@ public class WindowSwing {
         public void actionPerformed(ActionEvent e) {
             try {
                 ms.Update();
-            } catch (RemoteException e1) {
+            } catch (Exception e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
@@ -178,9 +191,57 @@ public class WindowSwing {
     box3.add(searchFactureArea);
     box4.add(Box.createRigidArea(new Dimension(15, 0)));
     box4.add(new JSeparator());
-    box5.add(new JButton("Add product"));
-    box5.add(new JButton("Add stock"));
-    box5.add(new JButton("See CA"));
+    JButton searchFactureButton = new JButton("Search Facture");
+    searchFactureButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+        }
+    });
+    box5.add(searchFactureButton);
+    
+    JButton addStockButton = new JButton("Add Stock");
+    addStockButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+        }
+    });
+    box5.add(addStockButton);
+    
+
+    JButton CAButton = new JButton("See CA");
+    CAButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            java.sql.Date date = null;
+            JDatePickerImpl a= null;
+            JPanel datePanel = getDatePanel();
+            a = (JDatePickerImpl) datePanel.getComponent(0);
+            int reply = JOptionPane.showConfirmDialog(null,
+                    datePanel,
+                    "Choose date for CA : ",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
+
+            date = (java.sql.Date) a.getModel().getValue();
+            if (reply == JOptionPane.YES_OPTION) {
+                try {
+                    String res = "CA :" +  ms.getImplcm().getChiffreAffaire(date.toString());
+                    JOptionPane.showMessageDialog(null, res + " " + date.toString());
+                } catch (HeadlessException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            } else {
+
+            }  
+        }
+    });
+    box5.add(CAButton);
     jp.add(box1);
     jp.add(box2);
     jp.add(box3);
@@ -188,7 +249,44 @@ public class WindowSwing {
     jp.add(box5);
   }
 
-  public static void main(String s[]) {
+  private JPanel getDatePanel() {
+      JPanel panel = new JPanel();
+      JLabel label = new JLabel("Choose a date");
+      SqlDateModel model = new SqlDateModel();
+      Properties propierties = new Properties();
+      propierties.put("text.today", "Today");
+      propierties.put("text.month", "Month");
+      propierties.put("text.year", "Year");
+      JDatePanelImpl datePanel = new JDatePanelImpl(model, propierties);
+      JDatePickerImpl datePicker = new JDatePickerImpl(datePanel,  new DateLabelFormatter());
+      panel.add(datePicker);
+      panel.add(label);
+      
+      return panel;
+}
+   
+  public class DateLabelFormatter extends AbstractFormatter {
+   
+      private String datePattern = "dd-MM-yyyy";
+      private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+       
+      @Override
+      public Object stringToValue(String text) throws ParseException {
+          return dateFormatter.parseObject(text);
+      }
+   
+      @Override
+      public String valueToString(Object value) throws ParseException {
+          if (value != null) {
+              Calendar cal = (Calendar) value;
+              return dateFormatter.format(cal.getTime());
+          }
+           
+          return "";
+      }
+   
+  }
+public static void main(String s[]) {
       WindowSwing ws = new WindowSwing();
     JFrame frame = new JFrame("Magasin");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
