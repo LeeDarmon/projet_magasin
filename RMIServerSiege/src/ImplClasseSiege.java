@@ -2,7 +2,7 @@ import java.sql.*;
 import java.util.*;  
 
 // Implémenter l'interface de l'objet distante
-public class ImplClasseSiege implements InterfaceArticle, InterfaceCommande {  
+public class ImplClasseSiege implements InterfaceArticle, InterfaceMagasin {  
    
     //Partie Commande 
 
@@ -126,11 +126,9 @@ public void UpdateArticle(String reference, int price) throws Exception {
     }
 }
 
+@Override
 public void UpdateAllArticles(Map<String, Integer> newPrices) throws Exception {
-    List<Article> liste = new ArrayList<Article>();   
-    
     Connection conn = null; 
-    Statement stmt = null;  
     
     //Enregistrer le pilote JDBC
     Class.forName("com.mysql.cj.jdbc.Driver");   
@@ -142,8 +140,6 @@ public void UpdateAllArticles(Map<String, Integer> newPrices) throws Exception {
     
     //Exécuter la requête
     System.out.println("Créer l'objet Statement..."); 
-    
-    stmt = conn.createStatement();  
     String sq = "UPDATE article set price=? where reference=?"; 
     
     for (Map.Entry<String, Integer> entry : newPrices.entrySet()) {
@@ -163,9 +159,9 @@ public void UpdateAllArticles(Map<String, Integer> newPrices) throws Exception {
     }  
 }
 
+@Override
 public void UpdateAllArticles() throws Exception {
-    Map<String, Integer> newPrices = new HashMap<String, Integer>();
-    List<Article> liste = new ArrayList<Article>();   
+    Map<String, Integer> newPrices = new HashMap<String, Integer>();   
     
     Connection conn = null; 
     Statement stmt = null;  
@@ -211,14 +207,6 @@ public void UpdateAllArticles() throws Exception {
         }  
     }  
 }
-
-
-@Override
-public Commande BuyArticle() throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-}
-
 
 @Override
 public List<Article> getArticleByID(int id) throws Exception {
@@ -305,4 +293,26 @@ public void addArticleStock(Article articleCible, int nbExemplaire) throws Excep
     // TODO Auto-generated method stub
     
 }
+
+
+@Override
+public int getChiffreAffaire(String date) throws Exception {
+    // TODO Auto-generated method stub
+    return 0;
+}
+
+
+@Override
+public String getUrl() throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+
+@Override
+public void addStock(String reference, int stock) throws Exception {
+    // TODO Auto-generated method stub
+    
+}
+
 }
