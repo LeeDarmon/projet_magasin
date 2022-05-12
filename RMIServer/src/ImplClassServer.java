@@ -13,6 +13,11 @@ import java.util.List;
 
 public class ImplClassServer extends UnicastRemoteObject implements InterfaceArticle, InterfaceCommande, Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     protected ImplClassServer() throws RemoteException {
         super();
         // TODO Auto-generated constructor stub
@@ -95,27 +100,9 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         
     }
 
-
-    @Override
-    public List<Article> getArticle() throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Article getArticleStock(Article article) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public List<Article> getArticleInformations(Article article) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     @Override
     public List<Article> getArticleFamille(String famille) throws Exception {
+        famille = famille.replaceAll("[^a-zA-Z0-9]", " ");
         List<Article> listeArticle = new ArrayList<Article>();
         Connection conn = null;
         Statement stmtSelect = null;
@@ -129,7 +116,7 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         System.out.println("Base de données connectée avec succès...");  
 
         stmtSelect = conn.createStatement();  
-        String sql = "SELECT * FROM article WHERE reference = " + famille + "AND WHERE nb_exemplaire > 0"; 
+        String sql = "SELECT * FROM article WHERE famille = '" + famille + "' AND nb_exemplaire > 0"; 
         ResultSet res = stmtSelect.executeQuery(sql);
         
         while(res.next()) {
@@ -146,6 +133,7 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
     
     @Override
     public Article getArticle(String reference) throws Exception {
+        reference = reference.replaceAll("[^a-zA-Z0-9]", " ");
         Article article = new Article();
 
         String sql = "SELECT * FROM article WHERE reference=? AND where nb_exemplaire > 0"; 
@@ -183,13 +171,7 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         
         return article;     
     }
-
-    @Override
-    public void UpdateArticle(String reference, int price) throws Exception {
-        // TODO Auto-generated method stub
-        
-    }
-
+    
     //Method from interfaceCommande
     @Override
     public Article addArticle(Article art) throws Exception {
@@ -229,6 +211,13 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         } else {
             return null;
         }
+    }
+
+
+    @Override
+    public List<Article> getAllArticle() throws Exception {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 

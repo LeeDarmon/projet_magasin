@@ -2,12 +2,17 @@ import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
  
-public class MagasinServer {
+public class MagasinServer extends UnicastRemoteObject {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private Registry registry = null;
     private ImplClassServer implcs = null;
     private ImplClassMagasin implcm = null;
+    private InterfaceArticle implMagasinSiege = null;
+    
     public MagasinServer() throws RemoteException {
         System.setProperty("java.rmi.server.hostname","127.0.1.1");
         registry = LocateRegistry.createRegistry(1975);
@@ -30,7 +35,7 @@ public class MagasinServer {
     }
 
     public void Update() throws Exception {
-        this.getImplcm().updateAllArticles();
+        this.getImplcm().updateAllArticles(this.implMagasinSiege.getAllArticle());
     }
     
     public void Fetch() throws RemoteException {
@@ -44,31 +49,29 @@ public class MagasinServer {
     }
     
     
-    public void initialize() throws AccessException, RemoteException, AlreadyBoundException {
+    public void initialize() throws Exception, AccessException, RemoteException, AlreadyBoundException {
         // crée l'objet distant
         ImplClassServer obj = new ImplClassServer(); 
-        ImplClassMagasin ob = new ImplClassMagasin();
+        ImplClassMagasin ob = new ImplClassMagasin("jdbc:mysql://localhost/magasin");
         implcs = obj;
         implcm = ob;
         
         // ici, nous exportons l'objet distant vers le stub
         registry.rebind("RemoteInterMagasin", obj);  
+
+        registry.rebind("RemoteInterMagasinSiege", (InterfaceMagasin) ob); 
+        
+        //On recupere le lien avec le siege 
+        Registry reg = LocateRegistry.getRegistry(1974);
+        System.out.print(reg);
+       // Recherche dans le registre de l'objet distant
+        this.implMagasinSiege = (InterfaceArticle) reg.lookup("RemoteInter"); 
+        
         System.out.println("Le Serveur magasin est prêt..."); 
     }
 
 public static void main(String[] args) throws Exception {  
     
-    //Serveur siege
-    Registry reg = LocateRegistry.getRegistry(1974);
-    
-    // Recherche dans le registre de l'objet distant
-    InterfaceArticle stubArticle = (InterfaceArticle) reg.lookup("RemoteInter"); 
-    InterfaceCommande stubCommande = (InterfaceCommande) reg.lookup("RemoteInter"); 
-    
-    //Mise en marche serveur magasin
-        MagasinServer ms = new MagasinServer();
-        //ms.initialize();
-        //ms.Update();
     }
 
 }

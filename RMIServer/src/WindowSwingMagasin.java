@@ -9,6 +9,7 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.sql.Date;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,6 +22,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -32,18 +34,20 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.text.MaskFormatter;
+import javax.swing.text.NumberFormatter;
 
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.SqlDateModel;
 import org.jdatepicker.impl.UtilDateModel;
 
-public class WindowSwing {
+public class WindowSwingMagasin {
     public JMenuBar jmb;
     public JPanel jp;
     public MagasinServer ms;
     
-  public WindowSwing() {    
+  public WindowSwingMagasin() {    
      
     // Listener générique qui affiche l'action du menu utilisé
     ActionListener afficherMenuListener = new ActionListener() {
@@ -175,40 +179,14 @@ public class WindowSwing {
         } catch (AlreadyBoundException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
         }
         }
     });
     box1.add(startServ);
 
-    box2.add(new JSeparator());
-
-    box2.add(Box.createRigidArea(new Dimension(15, 0)));
-    JTextField searchArticleArea = new JTextField();
-    box3.add(new JLabel("Search article : "));
-    box3.add(searchArticleArea);
-    JTextField searchFactureArea = new JTextField();
-    box3.add(new JLabel("Search facture : "));
-    box3.add(searchFactureArea);
-    box4.add(Box.createRigidArea(new Dimension(15, 0)));
-    box4.add(new JSeparator());
-    JButton searchFactureButton = new JButton("Search Facture");
-    searchFactureButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            
-        }
-    });
-    box5.add(searchFactureButton);
-    
-    JButton addStockButton = new JButton("Add Stock");
-    addStockButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            
-        }
-    });
-    box5.add(addStockButton);
-    
 
     JButton CAButton = new JButton("See CA");
     CAButton.addActionListener(new ActionListener() {
@@ -241,7 +219,64 @@ public class WindowSwing {
             }  
         }
     });
-    box5.add(CAButton);
+    box1.add(CAButton);
+    
+    box2.add(new JSeparator());
+
+    box2.add(Box.createRigidArea(new Dimension(15, 0)));
+    JTextField searchArticleArea = new JTextField();
+    box3.add(new JLabel("Search article : "));
+    box3.add(searchArticleArea);
+    JTextField searchFactureArea = new JTextField();
+    box3.add(new JLabel("Search facture : "));
+    box3.add(searchFactureArea);
+    box4.add(Box.createRigidArea(new Dimension(15, 0)));
+    box4.add(new JSeparator());
+
+    
+    JButton addStockButton = new JButton("Add Stock");
+    addStockButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String art = searchArticleArea.getText();
+            int stock = 0;
+            JFormattedTextField a= null;
+            JPanel inputPanel = getInputPanel();
+            a = (JFormattedTextField) inputPanel.getComponent(1);
+            int reply = JOptionPane.showConfirmDialog(null,
+                    inputPanel,
+                    "Choose stock : ",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
+
+            stock = (int) a.getValue();
+            if (reply == JOptionPane.YES_OPTION) {
+                try {
+                    ms.getImplcm().addStock(art, stock);
+                    JOptionPane.showMessageDialog(null, "Stock updated !");
+                } catch (HeadlessException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            } else {
+
+            }  
+        }
+    });
+    box5.add(addStockButton);
+    
+    JButton searchFactureButton = new JButton("Search Facture");
+    searchFactureButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            
+        }
+    });
+    box5.add(searchFactureButton);
+    
     jp.add(box1);
     jp.add(box2);
     jp.add(box3);
@@ -265,6 +300,36 @@ public class WindowSwing {
       return panel;
 }
    
+  private JPanel getInputPanel() {
+
+      JPanel panel = new JPanel();
+      JLabel label = new JLabel("How many stock to add ?");
+      panel.add(label);
+      NumberFormat format = NumberFormat.getInstance();
+      NumberFormatter formatter = new NumberFormatter(format);
+      formatter.setValueClass(Integer.class);
+      formatter.setMinimum(0);
+      formatter.setMaximum(Integer.MAX_VALUE);
+      formatter.setAllowsInvalid(false);
+      JFormattedTextField field = new JFormattedTextField(formatter);
+
+      field.setColumns(10);
+      panel.add(field);
+      
+      return panel;
+      
+  }
+  
+  protected MaskFormatter createFormatter(String s) {
+      MaskFormatter formatter = null;
+      try {
+          formatter = new MaskFormatter(s);
+      } catch (java.text.ParseException exc) {
+          System.err.println("formatter is bad: " + exc.getMessage());
+          System.exit(-1);
+      }
+      return formatter;
+  }
   public class DateLabelFormatter extends AbstractFormatter {
    
       private String datePattern = "dd-MM-yyyy";
@@ -287,7 +352,7 @@ public class WindowSwing {
    
   }
 public static void main(String s[]) {
-      WindowSwing ws = new WindowSwing();
+      WindowSwingMagasin ws = new WindowSwingMagasin();
     JFrame frame = new JFrame("Magasin");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setContentPane(ws.jp);

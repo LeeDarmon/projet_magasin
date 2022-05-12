@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NoSuchObjectException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -27,12 +28,12 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-public class WindowSwing {
+public class WindowSwingSiege {
     public JMenuBar jmb;
     public JPanel jp;
     public SiegeServer ms;
     
-  public WindowSwing() {    
+  public WindowSwingSiege() {    
      
     // Listener générique qui affiche l'action du menu utilisé
     ActionListener afficherMenuListener = new ActionListener() {
@@ -121,28 +122,12 @@ public class WindowSwing {
     Box box4 = new Box(BoxLayout.X_AXIS);
     Box box5 = new Box(BoxLayout.X_AXIS);
     
-    JButton UpdateButton = new JButton("Update server price");
-    UpdateButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-                try {
-
-                    JOptionPane.showMessageDialog(null, "Update prices successfully");
-                    ms.getImplcs().UpdateAllArticles();
-                } catch (Exception e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-        }
-    });
-    box1.add(UpdateButton);
-    
     JButton stopServ = new JButton("Stop server");
     stopServ.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                ms.Stop();
+                ms.stop();
             } catch (NoSuchObjectException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
@@ -170,15 +155,49 @@ public class WindowSwing {
         }
     });
     box1.add(startServ);
+    
+    JButton connectButton = new JButton("Connect to magasin");
+    connectButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+           try {
+            if(ms.connect()) {
+                JOptionPane.showMessageDialog(null, "Successfully logged to magasins");  
+            } else {
 
+                JOptionPane.showMessageDialog(null, "Failed connecting");  
+            }
+            
+        } catch (AccessException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (RemoteException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (AlreadyBoundException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (NotBoundException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        }
+    });
+    box1.add(connectButton);
+    
+    
     
     JButton getCommandes = new JButton("Get commandes");
     getCommandes.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                List<Commande> cm = ms.getImplcs().getFacture();
-                JOptionPane.showMessageDialog(null, "Commandes inserted successfully");
+                
+                if(ms.fetch() == true) {
+                    JOptionPane.showMessageDialog(null, "Commandes inserted successfully");   
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error with commandes");   
+                     }
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
@@ -186,7 +205,27 @@ public class WindowSwing {
         }
     });
     box1.add(getCommandes);
+
     
+    JButton UpdateButton = new JButton("Update server price");
+    UpdateButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+                try {
+                    if(ms.fetch()) {
+                        JOptionPane.showMessageDialog(null, "Update prices successfully");   
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Update prices failed");   
+                    }
+                    
+                    
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+        }
+    });
+    box1.add(UpdateButton);
     box2.add(new JSeparator());
 
     box2.add(Box.createRigidArea(new Dimension(15, 0)));
@@ -197,7 +236,7 @@ public class WindowSwing {
   }
 
   public static void main(String s[]) {
-      WindowSwing ws = new WindowSwing();
+      WindowSwingSiege ws = new WindowSwingSiege();
     JFrame frame = new JFrame("Siege");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setContentPane(ws.jp);

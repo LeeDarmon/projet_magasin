@@ -7,6 +7,8 @@ public interface InterfaceArticle extends Remote {
     public List<Article> getArticle(int famille) throws Exception;
     public Article getArticle(String reference) throws Exception;
     public Article getArticleStock(Article article) throws Exception;
+
+    public List<Article> getAllArticle() throws Exception;
     public List<Article> getArticleInformations(Article article) throws Exception;
     public List<Article> getArticleFamille(Article article) throws Exception;
     public void AddArticle(Article article) throws Exception;

@@ -7,8 +7,7 @@ public class ImplClasseSiege implements InterfaceArticle, InterfaceCommande {
     //Partie Commande 
 
     //Recupere les factures du serveur magasin et les insert dans le serveur central 
-    @Override
-    public List<Commande> getFacture() throws Exception {
+    public List<Commande> getFacture(String urlMagasin) throws Exception {
         List<Commande> factures = new ArrayList<Commande>();
         Connection connMagasin = null; 
         Connection connCentral = null; 
@@ -21,7 +20,7 @@ public class ImplClasseSiege implements InterfaceArticle, InterfaceCommande {
         
         //Ouvrez une connexion
         System.out.println("Connexion à la base de données sélectionnée..."); 
-        connMagasin = DriverManager.getConnection("jdbc:mysql://localhost/magasin", "root", ""); 
+        connMagasin = DriverManager.getConnection(urlMagasin, "root", ""); 
         connCentral = DriverManager.getConnection("jdbc:mysql://localhost/central", "root", ""); 
         System.out.println("Base de données connectée avec succès...");  
         
@@ -56,12 +55,7 @@ public class ImplClasseSiege implements InterfaceArticle, InterfaceCommande {
         res.close();
         return factures; 
     }
-
-    @Override
-    public Commande BuyArticle() throws Exception {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    
     
    // Implémenter la méthode de l'interface
    public List<Article> getArticle() throws Exception 
@@ -102,42 +96,6 @@ public class ImplClasseSiege implements InterfaceArticle, InterfaceCommande {
       return liste;     
    }
 
-@Override
-public List<Article> getArticle(int reference) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-}
-
-@Override
-public Article getArticleStock(Article article) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-}
-
-@Override
-public List<Article> getArticleInformations(Article article) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-}
-
-@Override
-public List<Article> getArticleFamille(Article article) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-}
-
-@Override
-public void AddArticle(Article article) throws Exception {
-    // TODO Auto-generated method stub
-    
-}
-
-@Override
-public void addArticleStock(Article articleCible, int nbExemplaire) throws Exception {
-    // TODO Auto-generated method stub
-    
-}
-
 
 @Override
 public void UpdateArticle(String reference, int price) throws Exception {
@@ -167,18 +125,6 @@ public void UpdateArticle(String reference, int price) throws Exception {
       e.printStackTrace();
     }
 }
-
-@Override
-public List<Article> getArticleByID(int id) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-}
-
-@Override
-public Article getArticle(String reference) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-}  
 
 public void UpdateAllArticles(Map<String, Integer> newPrices) throws Exception {
     List<Article> liste = new ArrayList<Article>();   
@@ -264,5 +210,99 @@ public void UpdateAllArticles() throws Exception {
           e.printStackTrace();
         }  
     }  
+}
+
+
+@Override
+public Commande BuyArticle() throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+
+@Override
+public List<Article> getArticleByID(int id) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+
+@Override
+public List<Article> getArticle(int famille) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+
+@Override
+public Article getArticle(String reference) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+
+@Override
+public Article getArticleStock(Article article) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+
+@Override
+public List<Article> getAllArticle() throws Exception {
+    List<Article> listeArticle = new ArrayList<Article>();
+    Connection conn = null;
+    Statement stmtSelect = null;
+    
+    //Enregistrer le pilote JDBC
+    Class.forName("com.mysql.cj.jdbc.Driver");   
+    
+    //Ouvrez une connexion
+    System.out.println("Connexion à la base de données sélectionnée..."); 
+    conn = DriverManager.getConnection("jdbc:mysql://localhost/central", "root", ""); 
+    System.out.println("Base de données connectée avec succès...");  
+
+    stmtSelect = conn.createStatement();  
+    String sql = "SELECT * FROM article"; 
+    ResultSet res = stmtSelect.executeQuery(sql);
+    
+    while(res.next()) {
+        Article a = new Article();
+        a.setFamille(res.getString("famille"));
+        a.setNb_exemplaire(res.getInt("nb_exemplaire"));
+        a.setReference(res.getString("reference"));
+        a.setPrix_unitaire(res.getInt("prix_unitaire"));
+        listeArticle.add(a);
+    }
+    
+    return listeArticle;
+}
+
+
+@Override
+public List<Article> getArticleInformations(Article article) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+
+@Override
+public List<Article> getArticleFamille(Article article) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+
+@Override
+public void AddArticle(Article article) throws Exception {
+    // TODO Auto-generated method stub
+    
+}
+
+
+@Override
+public void addArticleStock(Article articleCible, int nbExemplaire) throws Exception {
+    // TODO Auto-generated method stub
+    
 }
 }

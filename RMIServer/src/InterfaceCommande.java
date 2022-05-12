@@ -1,5 +1,4 @@
 import java.rmi.Remote;
-import java.util.List;
 
 public interface InterfaceCommande extends Remote {      
     public Article addArticle(Article art) throws Exception;
