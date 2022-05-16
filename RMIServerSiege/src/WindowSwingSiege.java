@@ -212,7 +212,7 @@ public class WindowSwingSiege {
         @Override
         public void actionPerformed(ActionEvent e) {
                 try {
-                    if(ms.fetch()) {
+                    if(ms.update()) {
                         JOptionPane.showMessageDialog(null, "Update prices successfully");   
                     } else {
                         JOptionPane.showMessageDialog(null, "Update prices failed");   

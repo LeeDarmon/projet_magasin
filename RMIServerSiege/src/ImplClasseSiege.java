@@ -1,4 +1,5 @@
-import java.sql.*; 
+import java.sql.*;
+import java.sql.Date;
 import java.util.*;  
 
 // Implémenter l'interface de l'objet distante
@@ -14,6 +15,12 @@ public class ImplClasseSiege implements InterfaceArticle, InterfaceMagasin {
         Statement stmt = null;  
         Statement stmtCentral = null;  
 
+
+        String query = "INSERT INTO commande "
+                + "(date_emission, methode_paiement, numticket, prix_total, ticket_de_caisse) "
+                + "VALUES (?,?,?,?,?) "
+                + "ON DUPLICATE KEY UPDATE "
+                + "numticket=?";
         
         //Enregistrer le pilote JDBC
         Class.forName("com.mysql.cj.jdbc.Driver");   
@@ -42,16 +49,18 @@ public class ImplClasseSiege implements InterfaceArticle, InterfaceMagasin {
            Commande c = new Commande();
            c = c.Deserialize(tic);
            c.setTicket(tic);
-           try (Statement stmtc = connCentral.createStatement()) {
-               stmtc.executeUpdate("insert into commande (date_emission, methode_paiement, numticket, prix_total, ticket_de_caisse)" +
-                                  "values("
-                                  + "STR_TO_DATE(" + "'"+ c.Date_emissionToString() +"',\"%d-%m-%Y\")"+ 
-                                  ", '" + c.getMethode_paiement() +
-                                  "', '" + c.getNumticket() + 
-                                  "', " + c.getPrixtotal() +
-                                  ", '"+  c.getTicket() +"')");
+           Date date=Date.valueOf(c.Date_emissionToStringJDBC());
+           PreparedStatement pst2 = connCentral.prepareStatement(query);
+           pst2.setDate(1, date);
+           pst2.setString(2,c.getMethode_paiement());
+           pst2.setString(3,c.getNumticket());
+           pst2.setInt(4,c.getPrixtotal());
+           pst2.setString(5,c.getTicket());
+           pst2.setString(6, c.getNumticket());
+           int x=pst2.executeUpdate();
+           System.out.println(x);
         }
-        }
+           
         res.close();
         return factures; 
     }

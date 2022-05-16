@@ -1,5 +1,7 @@
 import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,8 +32,14 @@ public class Commande implements Serializable {
     
     @Override
     public String toString() {
-        return "Commande [listArticle=" + listArticle + ", date_emission=" + date_emission + ", prixtotal=" + prixtotal
-                + ", ticket=" + ticket + "]";
+
+        String articles = "";
+        for(int i = 0; i < this.listArticle.size(); i++) {
+           articles = "\n" + articles + this.listArticle.get(i).getReference();
+           System.out.println(this.listArticle.get(i).getReference());
+        }
+        return "Facture\n Articles" + articles + "\n date d'emission : " + date_emission + "\nprix total=" + prixtotal
+                + "\nticket=" + ticket + "]";
     }
 
     private List<Article> listArticle;
@@ -86,11 +94,28 @@ public class Commande implements Serializable {
         return date_emission;
     }
     
+    //Retourne un objet Date formate
+    public java.sql.Date Date_emissionFormat() throws ParseException{
+        java.sql.Date date = new java.sql.Date(this.getDate_emission().getTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");  
+        String dates = formatter.format(date); 
+        return (java.sql.Date) DateFormat.getDateInstance().parse(dates);  
+
+    }
+    
     public String Date_emissionToString() {
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");  
         Date date = new Date();  
         return formatter.format(date);  
+
+    }
+    
+    public String Date_emissionToStringJDBC() {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
+        Date date = new Date();  
+        return formatter.format(this.getDate_emission());  
 
     }
 

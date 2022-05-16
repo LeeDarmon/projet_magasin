@@ -48,6 +48,13 @@ public class MagasinServer extends UnicastRemoteObject {
         System.exit(0);
     }
     
+    public void Connect() throws RemoteException, NotBoundException {
+        //On recupere le lien avec le siege 
+        Registry reg = LocateRegistry.getRegistry(1974);
+       // Recherche dans le registre de l'objet distant
+        this.implMagasinSiege = (InterfaceArticle) reg.lookup("RemoteInter"); 
+    }
+    
     
     public void initialize() throws Exception, AccessException, RemoteException, AlreadyBoundException {
         // crée l'objet distant
@@ -60,12 +67,6 @@ public class MagasinServer extends UnicastRemoteObject {
         registry.rebind("RemoteInterMagasin", obj);  
 
         registry.rebind("RemoteInterMagasinSiege", (InterfaceMagasin) ob); 
-        
-        //On recupere le lien avec le siege 
-        Registry reg = LocateRegistry.getRegistry(1974);
-        System.out.print(reg);
-       // Recherche dans le registre de l'objet distant
-        this.implMagasinSiege = (InterfaceArticle) reg.lookup("RemoteInter"); 
         
         System.out.println("Le Serveur magasin est prêt..."); 
     }

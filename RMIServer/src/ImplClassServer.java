@@ -20,7 +20,6 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
 
     protected ImplClassServer() throws RemoteException {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 
@@ -87,7 +86,7 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate("insert into commande (date_emission, methode_paiement, numticket, prix_total, ticket_de_caisse)" +
                                "values("
-                               + "STR_TO_DATE(" + "'"+ c.Date_emissionToString() +"',\"%Y-%m-%d\")"+ 
+                               + "STR_TO_DATE(" + "'"+ c.Date_emissionToString() +"',\"%d-%m-%Y\")"+ 
                                ", '" + c.getMethode_paiement() +
                                "', '" + c.getNumticket() + 
                                "', " + c.getPrixtotal() +
@@ -136,7 +135,7 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         reference = reference.replaceAll("[^a-zA-Z0-9]", " ");
         Article article = new Article();
 
-        String sql = "SELECT * FROM article WHERE reference=? AND where nb_exemplaire > 0"; 
+        String sql = "SELECT * FROM article WHERE reference=? AND nb_exemplaire > 0"; 
         Connection conn = null; 
         
         //Enregistrer le pilote JDBC
@@ -172,6 +171,7 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         return article;     
     }
     
+    
     //Method from interfaceCommande
     @Override
     public Article addArticle(Article art) throws Exception {
@@ -180,7 +180,7 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
 
     @Override
     public Commande getFacture(String numticket) throws Exception {
-        Commande c = null;
+        Commande c = new Commande();
         Connection conn = null; 
         Statement stmt = null;  
         
@@ -200,6 +200,7 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         ResultSet res = stmt.executeQuery(sql);  
         
         if(res != null) {
+            res.next();
            /* c.setDate_emission(res.getDate("date_emission"));
             c.setNumticket(res.getString("numticket"));
             c.setPrixtotal(res.getInt("prix_total"));   

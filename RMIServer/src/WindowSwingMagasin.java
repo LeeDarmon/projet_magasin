@@ -187,7 +187,27 @@ public class WindowSwingMagasin {
     });
     box1.add(startServ);
 
-
+    JButton connectServ = new JButton("Connect to Siege server");
+    connectServ.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+           try {
+            ms.Connect();
+            JOptionPane.showMessageDialog(null, "Connection to Siege successful");
+        } catch (AccessException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (RemoteException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        } catch (Exception e1) {
+            JOptionPane.showMessageDialog(null, "Connection to Siege failed");
+            e1.printStackTrace();
+        }
+        }
+    });
+    box1.add(connectServ);
+    
     JButton CAButton = new JButton("See CA");
     CAButton.addActionListener(new ActionListener() {
         @Override
@@ -272,7 +292,12 @@ public class WindowSwingMagasin {
     searchFactureButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            
+            try {
+                JOptionPane.showMessageDialog(null, ms.getImplcs().getFacture(searchFactureArea.getText()).toString());
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
         }
     });
     box5.add(searchFactureButton);

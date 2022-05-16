@@ -30,8 +30,15 @@ public class Commande implements Serializable {
     
     @Override
     public String toString() {
-        return "Commande [listArticle=" + listArticle + ", date_emission=" + date_emission + ", prixtotal=" + prixtotal
-                + ", ticket=" + ticket + "]";
+
+        String articles = "";
+        for(int i = 0; i < this.listArticle.size(); i++) {
+           articles = "\n" + articles + this.listArticle.get(i).getReference();
+           System.out.println(this.listArticle.get(i).getReference());
+        }
+        return "Facture\n\nArticles:" + articles 
+                + "\n\ndate d'emission : " + date_emission 
+                + "\nprix total=" + prixtotal;
     }
 
     private List<Article> listArticle;
