@@ -142,6 +142,7 @@ public class WindowSwingMagasin {
         public void actionPerformed(ActionEvent e) {
             try {
                 ms.Update();
+                JOptionPane.showMessageDialog(null, "Articles prices updated !");
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
