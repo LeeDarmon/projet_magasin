@@ -26,6 +26,19 @@ public class Commande implements Serializable {
      * 
      */
     private static final long serialVersionUID = 1L;
+
+    private List<Article> listArticle;
+    private Date date_emission;
+    private int prixtotal;
+    private String methode_paiement; 
+    private String numticket;
+    /*
+     * Correspond au tableau json de cette objet.
+     * Garde le string pour permettre la serialisation/deserialisation de la commande.
+     */
+    private String ticket;
+    
+
     
     @Override
     public String toString() {
@@ -39,14 +52,6 @@ public class Commande implements Serializable {
                 + "\n\ndate d'emission : " + date_emission 
                 + "\nprix total=" + prixtotal;
     }
-
-    private List<Article> listArticle;
-    private Date date_emission;
-    private int prixtotal;
-    private String methode_paiement; 
-    private String numticket;
-    private String ticket;
-    
     
     public Commande(List<Article> listArticle, Date date_emission, int prixtotal, String ticket) {
         super();
