@@ -6,8 +6,8 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JDatePicker"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gson"/>
 	<classpathentry kind="lib" path="res/mysql-connector-java-8.0.27.jar"/>
+	<classpathentry kind="lib" path="res/gson-2.6.2.jar"/>
+	<classpathentry kind="lib" path="res/jdatepicker-1.3.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
