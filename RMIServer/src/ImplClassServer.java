@@ -39,6 +39,8 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
         
         //Exécuter la requête
         System.out.println("Créer l'objet Statement...");   
+        if(c.getListArticle().size() > 0) {
+            
         for(int i = 0; i < c.getListArticle().size(); i++) {
             List<Article> a = c.getListArticle();
             ref = a.get(i).getReference();
@@ -96,7 +98,10 @@ public class ImplClassServer extends UnicastRemoteObject implements InterfaceArt
           }
         
         return true;
-        
+
+        } else {
+            return false;
+        }
     }
 
     @Override
