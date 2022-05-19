@@ -1,12 +1,8 @@
 import java.io.Serializable;
 
 /**
+ * Correspond a l'objet Article de la bdd associe. 
  * 
- */
-
-/**
- * @author Gabriel
- *
  */
 public class Article implements Serializable {
     /**

@@ -2,11 +2,13 @@ import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
  
 public class Client  extends UnicastRemoteObject {
     public InterfaceArticle stubArticle;
     public InterfaceCommande stubCommande;
+    /*
+     * Le contenu du panier du client est garde en local ici.
+     */
     public Commande commandeActuel;
     
     public Client() throws Exception{
@@ -15,7 +17,6 @@ public class Client  extends UnicastRemoteObject {
     public void initialize() throws Exception {
         // Récupérer le registre
            Registry reg = LocateRegistry.getRegistry(1975);
-           System.out.print(reg);
           // Recherche dans le registre de l'objet distant
           stubArticle = (InterfaceArticle) reg.lookup("RemoteInterMagasin"); 
           stubCommande = (InterfaceCommande) reg.lookup("RemoteInterMagasin"); 

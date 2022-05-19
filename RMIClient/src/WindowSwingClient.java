@@ -5,7 +5,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,6 +18,11 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
+/*
+ * Interface graphique pour le client.
+ * Comporte quatre bouton : See cart, buy cart, Search by family, search 
+ * Aucun traitement n'est fait du cote client, seulement des appels de methodes distants. 
+ */
 public class WindowSwingClient {
     public JMenuBar jmb;
     public JPanel jp;
@@ -34,6 +38,7 @@ public class WindowSwingClient {
     Box box3 = new Box(BoxLayout.X_AXIS);
     Box box4 = new Box(BoxLayout.X_AXIS);
     Box box5 = new Box(BoxLayout.X_AXIS);
+    
     JButton seeCartButton = new JButton("See cart");
     seeCartButton.addActionListener(new ActionListener() {
         @Override
@@ -42,6 +47,7 @@ public class WindowSwingClient {
         }
     });
     box1.add(seeCartButton);
+    
     JButton buyCartButton = new JButton("Buy cart");
     buyCartButton.addActionListener(new ActionListener() {
         @Override
@@ -66,7 +72,9 @@ public class WindowSwingClient {
         }
     });
     box1.add(buyCartButton);
+    
     box2.add(new JSeparator());
+    
     box3.add(new JLabel("Search article"));
     JTextField searchField = new JTextField("");
     searchField.setSize(5, 5);

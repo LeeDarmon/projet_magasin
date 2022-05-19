@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 /**
- * @author Gabriel
- *
+ * Classe correspondant a l'objet Commande dans la bdd.
+ * Modelise la facture d'un achat
  */
 public class Commande implements Serializable {
     /**

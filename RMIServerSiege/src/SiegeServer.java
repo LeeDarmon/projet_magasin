@@ -146,14 +146,6 @@ public class SiegeServer {
     }
 
     public static void main(String args[]) {
-    try { 
-        SiegeServer ss = new SiegeServer();
-        ss.initialize();
-     } catch (Exception e) { 
-        System.err.println(e.toString()); 
-        e.printStackTrace(); 
-     }
-    
     
     }
 }

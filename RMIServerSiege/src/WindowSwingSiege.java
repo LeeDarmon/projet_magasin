@@ -27,7 +27,10 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-
+/*
+ * Interface graphique pour le serveur siège.
+ * Comporte cinq buttons : Stop, Start, Update Prices, Get Commandes 
+ */
 public class WindowSwingSiege {
     public JMenuBar jmb;
     public JPanel jp;
