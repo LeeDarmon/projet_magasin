@@ -66,7 +66,6 @@ public class ImplClasseSiege implements InterfaceArticle, InterfaceMagasin {
     }
     
     
-   // Implémenter la méthode de l'interface
    public List<Article> getArticle() throws Exception 
    {  
       List<Article> liste = new ArrayList<Article>();   
@@ -114,13 +113,11 @@ public void UpdateArticle(String reference, int price) throws Exception {
     //Enregistrer le pilote JDBC
     Class.forName("com.mysql.cj.jdbc.Driver");   
     
-    //Ouvrez une connexion
+    //Connexion ouverte
     System.out.println("Connexion à la base de données sélectionnée..."); 
     connCentral = DriverManager.getConnection("jdbc:mysql://localhost/central", "root", ""); 
     System.out.println("Base de données connectée avec succès...");  
     
-    //Exécuter la requête
-    System.out.println("Créer l'objet Statement..."); 
     String sq = "UPDATE article set price=? where reference=?"; 
 
     try (
@@ -135,6 +132,10 @@ public void UpdateArticle(String reference, int price) throws Exception {
     }
 }
 
+/*
+ * Met a jour les prix des articles du serveur siege selon une Map en parametre
+ * La cle correspond a la reference de l'article, la valeur le nouveau prix 
+ */
 @Override
 public void UpdateAllArticles(Map<String, Integer> newPrices) throws Exception {
     Connection conn = null; 
@@ -142,13 +143,11 @@ public void UpdateAllArticles(Map<String, Integer> newPrices) throws Exception {
     //Enregistrer le pilote JDBC
     Class.forName("com.mysql.cj.jdbc.Driver");   
     
-    //Ouvrez une connexion
     System.out.println("Connexion à la base de données sélectionnée..."); 
     conn = DriverManager.getConnection("jdbc:mysql://localhost/central", "root", ""); 
     System.out.println("Base de données connectée avec succès...");  
+
     
-    //Exécuter la requête
-    System.out.println("Créer l'objet Statement..."); 
     String sq = "UPDATE article set price=? where reference=?"; 
     
     for (Map.Entry<String, Integer> entry : newPrices.entrySet()) {
@@ -217,33 +216,6 @@ public void UpdateAllArticles() throws Exception {
     }  
 }
 
-@Override
-public List<Article> getArticleByID(int id) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-}
-
-
-@Override
-public List<Article> getArticle(int famille) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-}
-
-
-@Override
-public Article getArticle(String reference) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-}
-
-
-@Override
-public Article getArticleStock(Article article) throws Exception {
-    // TODO Auto-generated method stub
-    return null;
-}
-
 
 @Override
 public List<Article> getAllArticle() throws Exception {
@@ -273,6 +245,36 @@ public List<Article> getAllArticle() throws Exception {
     }
     
     return listeArticle;
+}
+
+/*
+ * Methodes non implementees de l'interface 
+ */
+@Override
+public List<Article> getArticleByID(int id) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+
+@Override
+public List<Article> getArticle(int famille) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+
+@Override
+public Article getArticle(String reference) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+}
+
+
+@Override
+public Article getArticleStock(Article article) throws Exception {
+    // TODO Auto-generated method stub
+    return null;
 }
 
 

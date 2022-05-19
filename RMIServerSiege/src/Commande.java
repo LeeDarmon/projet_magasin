@@ -20,10 +20,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * @author Gabriel
- *
+ * Classe correspondant a l'objet Commande dans la bdd.
+ * Modelise la facture d'un achat
  */
-
 public class Commande implements Serializable {
     /**
      * 

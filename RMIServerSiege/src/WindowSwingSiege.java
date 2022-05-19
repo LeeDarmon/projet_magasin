@@ -29,7 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 /*
  * Interface graphique pour le serveur siège.
- * Comporte cinq buttons : Stop, Start, Update Prices, Get Commandes 
+ * Comporte cinq buttons : Stop, Start, Connect to magasin, Update Prices, Get Commandes 
  */
 public class WindowSwingSiege {
     public JMenuBar jmb;

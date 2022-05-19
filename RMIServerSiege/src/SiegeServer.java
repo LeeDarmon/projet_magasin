@@ -63,14 +63,11 @@ public class SiegeServer {
         // Get duration between now and next run
         final Duration initialUpdateDelay = Duration.between(now, nextUpdateRun);
         final Duration initialFetchDelay = Duration.between(now, nextFetchRun);
-        
-        // Schedule a task to run at midnight and then every day
         final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(() -> {
                 try {
                     this.update();
                 } catch (RemoteException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
         },
@@ -103,6 +100,11 @@ public class SiegeServer {
         }
     }
     
+    /*
+     * Update chaque article. 
+     * Il existe deux méthodes, celle utilisé pour la demo multiple x2 le prix.
+     * Une autre prend une HashMap avec pour clé la référence de l'article, et valeur le nouveau prix 
+     */
     public boolean update() throws RemoteException {
         try {
             this.getImplcs().UpdateAllArticles();
@@ -113,12 +115,12 @@ public class SiegeServer {
         }      
     }
     
-    
     public void stop() throws NoSuchObjectException {
         System.out.println("stopping rmi server.");
         UnicastRemoteObject.unexportObject(registry, true);
         System.exit(0);
     }
+    
     
     public void initialize() throws AccessException, RemoteException, AlreadyBoundException {
         // crée l'objet distant
